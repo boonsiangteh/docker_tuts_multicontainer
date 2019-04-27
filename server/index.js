@@ -19,7 +19,7 @@ const pgClient = new Pool({
 });
 pgClient.on('error', () => console.log('Lost connection to postgres') );
 pgClient
-  .query('CREATE TABLE IS NOT EXISTS values (number INT)')
+  .query('CREATE TABLE IF NOT EXISTS values (number INT)')
   .catch( err => console.log(err));
 
 // REDIS CLIENT SETUP
@@ -60,7 +60,7 @@ app.post('/values', (req,res) => {
   redisPublisher.publish('insert', index);
 
   // insert index into postgres for record keeping
-  pgClient.query("INSERT INTO values(number) VALUEs($1)", [index]);
+  pgClient.query("INSERT INTO values(number) VALUES($1)", [index]);
 
   res.send({working: true});
 });
