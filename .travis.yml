@@ -1,0 +1,26 @@
+sudo: required
+services:
+  - docker
+
+# build dev version to run all test on react app image
+before_install:
+  - docker build -t boonsiangteh/react-test -f ./client/Dockerfile.dev ./client
+
+# run test and add "-- --coverage" to automatically exit after finishing test (default npm test does not exit)
+scripts:
+  - docker run boonsiangteh/react-test npm test -- --coverage
+
+# build prod version images for all components after tests successful and push to dockerhub
+after_success:
+  - docker build -t boonsiangteh/multi-client ./client
+  - docker build -t boonsiangteh/multi-nginx ./nginx
+  - docker build -t boonsiangteh/multi-server ./server
+  - docker build -t boonsiangteh/multi-worker ./worker
+  # Login to docker cli (this is used to login to our dockerhub account)
+  # (echo our env variable DOCKER_PASSWORD and pipe into docker login command as stdin )
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # push all our images to dockerhub
+  - docker push boonsiangteh/multi-client
+  - docker push boonsiangteh/multi-nginx
+  - docker push boonsiangteh/multi-server
+  - docker push boonsiangteh/multi-worker
