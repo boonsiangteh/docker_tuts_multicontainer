@@ -8,9 +8,7 @@ before_install:
 
 # run test and add "-- --coverage" to automatically exit after finishing test (default npm test does not exit)
 script:
-  - echo "start script"
-  - docker run boonsiangteh/react-test npm test -- --coverage --watchAll=false
-  - echo "end script"
+  - docker run boonsiangteh/react-test npm test -- --coverage
 
 # build prod version images for all components after tests successful and push to dockerhub
 after_success:
