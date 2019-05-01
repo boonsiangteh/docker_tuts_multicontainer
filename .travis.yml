@@ -24,3 +24,20 @@ after_success:
   - docker push boonsiangteh/multi-nginx
   - docker push boonsiangteh/multi-server
   - docker push boonsiangteh/multi-worker
+
+# perform configuration for deployment to AWS Elastic Beanstalk service
+deploy:
+  provider: elasticbeanstalk
+  region: ap-southeast-1
+  app: multi-container-docker
+  env: MultiContainerDocker-env
+  # this is the S3 bucket which will be generated for us when we start elastic beanstalk instance
+  bucket_name: elasticbeanstalk-ap-southeast-1-527637964781
+  # a bucket folder with the name of our app will be created for us in the list of S3 buckets when we deploy our app
+  bucket_path: multi-container-docker
+  # only do deployment whenever we push to master branch
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
