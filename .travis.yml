@@ -4,7 +4,7 @@ services:
 before_install:
     - docker build -t boonsiangteh/multi-client -f ./client/Dockerfile.dev ./client
 script:
-    - docker run boonsiangteh/multi-client npm test -- --coverage --ci
+    - docker run boonsiangteh/multi-client npm test -- --coverage
 
 after_success:
     - docker build -t boonsiangteh/multi-client ./client
